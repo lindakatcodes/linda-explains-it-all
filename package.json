@@ -10,7 +10,9 @@
   },
   "devDependencies": {
     "@astrojs/preact": "^0.0.2",
-    "astro": "^1.0.0-beta.0"
+    "@astrojs/vue": "^0.0.2",
+    "astro": "^1.0.0-beta.0",
+    "vue": "^3.2.31"
   },
   "dependencies": {
     "preact": "^10.7.0"
