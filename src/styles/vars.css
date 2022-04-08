@@ -1,7 +1,8 @@
 :root {
-  --secondary: #5093fe;
   --primary: #e661b1;
+  --secondary: #5093fe;
   --white: #f3f3f3;
+  --black: #202020;
   --accent-dark: #bb3aa6;
   --accent-light: #eed058;
   --title-font: "Just Another Hand", cursive;

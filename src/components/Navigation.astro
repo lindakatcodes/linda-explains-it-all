@@ -1,0 +1,41 @@
+<header class="wrapper">
+	<nav>
+			<a href="/">
+        Home
+			</a>
+      <a href="/">
+        About
+			</a>
+      <!-- search eventually?  -->
+      <!-- light / dark switch? -->
+	</nav>
+</header>
+
+<style>
+  header {
+    width: 100%;
+    height: 100%;
+    border-bottom: 2px solid var(--accent-dark);
+    padding-bottom: 10px;
+  }
+
+  nav {
+    display: flex;
+  }
+
+  a {
+    margin: 6% 4% 0;
+    font-size: 1.2rem;
+    font-family: var(--body-font);
+    color: var(--primary);
+    font-weight: bold;
+    text-decoration-color: var(--secondary);
+    transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+
+  a:hover, a:focus {
+    color: var(--secondary);
+    text-decoration-color: var(--primary);
+  }
+</style>
