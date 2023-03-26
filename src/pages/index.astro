@@ -6,7 +6,9 @@ import HeroIntro from "../components/HeroIntro.astro";
 import BlogPostPreview from "../components/BlogPostPreview.astro";
 
 import { contentfulClient } from "../lib/contentful";
-import type { Post } from "../lib/contentful";
+import type { TypePostFields } from "../lib/contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 
 const headProps = {
   title: "Linda Explains it All",
@@ -20,33 +22,21 @@ const introProps = {
   description: "Talking tech & having fun, yo!",
 };
 
-// Data Fetching: List all Markdown posts in the repo.
-
-// let allPosts = await Astro.glob("./posts/*.mdx");
-// allPosts = allPosts.sort(
-//   (a, b) =>
-//     new Date(b.frontmatter.publishDate).valueOf() -
-//     new Date(a.frontmatter.publishDate).valueOf()
-// );
-
-const entries = await contentfulClient.getEntries<Post>({
-  content_type: "2wKn6yEnZewu2SCCkus4as",
+const entries = await contentfulClient.getEntries<TypePostFields>({
+  content_type: "post",
 });
 
 const posts = entries.items.map((item) => {
-  const { title, slug, body, tags, date, comments } = item.fields;
+  const { title, slug, body, topics } = item.fields;
+  const excerpt = `${documentToPlainTextString(body).slice(0, 100)}...`;
   return {
     title,
     slug,
-    body,
-    tags,
-    comments,
-    date: new Date(date).toLocaleDateString(),
+    body: documentToHtmlString(body),
+    excerpt,
+    topics,
   };
 });
-
-// Full Astro Component Syntax:
-// https://docs.astro.build/core-concepts/astro-components/
 ---
 
 <html lang="en">
@@ -70,14 +60,13 @@ const posts = entries.items.map((item) => {
     <main>
       <HeroIntro {...introProps} />
       <section aria-label="Blog post list">
-        <!-- {allPosts.map((p) => <BlogPostPreview post={p} />)} -->
         {
           posts.map((post) => (
             <li>
               <a href={`/posts/${post.slug}/`}>
                 <h2>{post.title}</h2>
               </a>
-              <time>{post.date}</time>
+              <div>{post.excerpt}</div>
             </li>
           ))
         }
