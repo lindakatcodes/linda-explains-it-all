@@ -1,55 +1,87 @@
 ---
 // Component Imports
-import BaseHead from '../components/BaseHead.astro';
-import Navigation from '../components/Navigation.astro';
-import HeroIntro from '../components/HeroIntro.astro'
-import BlogPostPreview from '../components/BlogPostPreview.astro';
+import BaseHead from "../components/BaseHead.astro";
+import Navigation from "../components/Navigation.astro";
+import HeroIntro from "../components/HeroIntro.astro";
+import BlogPostPreview from "../components/BlogPostPreview.astro";
+
+import { contentfulClient } from "../lib/contentful";
+import type { Post } from "../lib/contentful";
 
 const headProps = {
-  title: 'Linda Explains it All',
-  description: 'A technical blog striving to be straight forward and fun.',
-  permalink: 'linda-explains-it-all.netlify.app',
-}
+  title: "Linda Explains it All",
+  description: "A technical blog striving to be straight forward and fun.",
+  permalink: "linda-explains-it-all.netlify.app",
+};
 
 const introProps = {
-  title: 'LINDA',
-  subtitle: 'EXPLAINS IT ALL',
-  description: 'Talking tech & having fun, yo!'
-}
+  title: "LINDA",
+  subtitle: "EXPLAINS IT ALL",
+  description: "Talking tech & having fun, yo!",
+};
 
 // Data Fetching: List all Markdown posts in the repo.
 
-let allPosts = await Astro.glob('./posts/*.md');
-allPosts = allPosts.sort((a, b) => new Date(b.frontmatter.publishDate).valueOf() - new Date(a.frontmatter.publishDate).valueOf());
+// let allPosts = await Astro.glob("./posts/*.mdx");
+// allPosts = allPosts.sort(
+//   (a, b) =>
+//     new Date(b.frontmatter.publishDate).valueOf() -
+//     new Date(a.frontmatter.publishDate).valueOf()
+// );
+
+const entries = await contentfulClient.getEntries<Post>({
+  content_type: "2wKn6yEnZewu2SCCkus4as",
+});
+
+const posts = entries.items.map((item) => {
+  const { title, slug, body, tags, date, comments } = item.fields;
+  return {
+    title,
+    slug,
+    body,
+    tags,
+    comments,
+    date: new Date(date).toLocaleDateString(),
+  };
+});
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 ---
 
 <html lang="en">
-	<head>
-		<BaseHead {...headProps} />
+  <head>
+    <BaseHead {...headProps} />
 
-		<style>
-
+    <style>
       * {
         box-sizing: border-box;
         margin: 0;
       }
-			body {
+      body {
         background-color: var(--white);
         margin: 0;
       }
-		</style>
-	</head>
+    </style>
+  </head>
 
-	<body>
-		<Navigation />
+  <body>
+    <Navigation />
     <main>
       <HeroIntro {...introProps} />
       <section aria-label="Blog post list">
-        {allPosts.map((p) => <BlogPostPreview post={p} />)}
+        <!-- {allPosts.map((p) => <BlogPostPreview post={p} />)} -->
+        {
+          posts.map((post) => (
+            <li>
+              <a href={`/posts/${post.slug}/`}>
+                <h2>{post.title}</h2>
+              </a>
+              <time>{post.date}</time>
+            </li>
+          ))
+        }
       </section>
     </main>
-	</body>
+  </body>
 </html>
