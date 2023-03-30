@@ -19,7 +19,6 @@ const headProps = {
 const introProps = {
   title: "LINDA",
   subtitle: "EXPLAINS IT ALL",
-  description: "Talking tech & having fun, yo!",
 };
 
 const entries = await contentfulClient.getEntries<TypePostFields>({
@@ -62,12 +61,13 @@ const posts = entries.items.map((item) => {
       <section aria-label="Blog post list">
         {
           posts.map((post) => (
-            <li>
-              <a href={`/posts/${post.slug}/`}>
-                <h2>{post.title}</h2>
-              </a>
-              <div>{post.excerpt}</div>
-            </li>
+            <BlogPostPreview post={post} />
+            // <li>
+            //   <a href={`/posts/${post.slug}/`}>
+            //     <h2>{post.title}</h2>
+            //   </a>
+            //   <div>{post.excerpt}</div>
+            // </li>
           ))
         }
       </section>
